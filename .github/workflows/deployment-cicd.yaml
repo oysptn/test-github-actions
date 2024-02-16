@@ -29,4 +29,45 @@ jobs:
         issue-title: "Deploying v1.0.0 to ${{ github.event.inputs.environment }}"
         issue-body: "Review the terraform plan, then approve or deny the deployment of v1.0.0 to ${{ github.event.inputs.environment }}"
         exclude-workflow-initiator-as-approver: false
-   
+    - name: Set AWS Credentials
+      run: |
+        AWS_SECRET_ACCESS_KEY_NAME="AWS_SECRET_ACCESS_KEY_${{ github.event.inputs.environment }}"
+        AWS_ACCESS_KEY_ID_NAME="AWS_ACCESS_KEY_ID_${{ github.event.inputs.environment }}"
+        echo "AWS_SECRET_ACCESS_KEY=${{ secrets[AWS_SECRET_ACCESS_KEY_NAME] }}" >> $GITHUB_ENV
+        echo "AWS_ACCESS_KEY_ID=${{ secrets[AWS_ACCESS_KEY_ID_NAME] }}" >> $GITHUB_ENV
+
+    - name: Display AWS_SECRET_ACCESS_KEY
+      run: |
+        echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+      shell: bash
+      
+    - name: Checkout Repo
+      uses: actions/checkout@v1
+
+    - name: Terraform Init
+      uses: hashicorp/terraform-github-actions/init@v0.4.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
+        TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Terraform Validate
+      uses: hashicorp/terraform-github-actions/validate@v0.3.7
+
+    - uses: trstringer/manual-approval@v1
+      with:
+        secret: ${{ github.TOKEN }}
+        approvers: comicalwriter
+        minimum-approvals: 1
+        issue-title: "Deploying v1.0.0 to ${{ github.event.inputs.environment }}"
+        issue-body: "Review the terraform plan, then approve or deny the deployment of v1.0.0 to ${{ github.event.inputs.environment }}"
+        exclude-workflow-initiator-as-approver: false
+
+    - name: Terraform Plan
+      uses: hashicorp/terraform-github-actions/plan@v0.4.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
