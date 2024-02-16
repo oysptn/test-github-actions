@@ -35,8 +35,8 @@ jobs:
         AWS_ACCESS_KEY_ID_NAME="AWS_ACCESS_KEY_ID_"${{ github.event.inputs.environment }}
         echo AWS_ACCESS_KEY_ID_NAME
         echo AWS_SECRET_ACCESS_KEY_NAME
-        echo "AWS_SECRET_ACCESS_KEY=${{ secrets[AWS_SECRET_ACCESS_KEY_NAME] }}" >> $GITHUB_ENV
-        echo "AWS_ACCESS_KEY_ID=${{ secrets[AWS_ACCESS_KEY_ID_NAME] }}" >> $GITHUB_ENV
+        # echo "AWS_SECRET_ACCESS_KEY=${{ secrets[AWS_SECRET_ACCESS_KEY_NAME] }}" >> $GITHUB_ENV
+        # echo "AWS_ACCESS_KEY_ID=${{ secrets[AWS_ACCESS_KEY_ID_NAME] }}" >> $GITHUB_ENV
         
     - name: Display AWS_SECRET_ACCESS_KEY
       run: |
