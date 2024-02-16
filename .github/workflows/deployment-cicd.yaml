@@ -1,0 +1,61 @@
+name: Deploy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy (e.g., dev, sqa, prod)'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - sqa
+          - prod
+
+jobs:
+  tf_fmt:
+    name: Deploy Site
+    runs-on: ubuntu-latest
+    steps:
+      
+    - name: Set AWS Credentials
+      run: |
+        echo "AWS_SECRET_ACCESS_KEY=${{ secrets['AWS_SECRET_ACCESS_KEY_' + github.event.inputs.environment] }}" >> $GITHUB_ENV
+        echo "AWS_ACCESS_KEY_ID=${{ secrets['AWS_ACCESS_KEY_ID_' + github.event.inputs.environment] }}" >> $GITHUB_ENV
+
+    - name: Display AWS_SECRET_ACCESS_KEY
+      run: |
+        echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+      shell: bash
+      
+    - name: Checkout Repo
+      uses: actions/checkout@v1
+
+    - name: Terraform Init
+      uses: hashicorp/terraform-github-actions/init@v0.4.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
+        TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Terraform Validate
+      uses: hashicorp/terraform-github-actions/validate@v0.3.7
+
+    - uses: trstringer/manual-approval@v1
+      with:
+        secret: ${{ github.TOKEN }}
+        approvers: toantrinh0208
+        minimum-approvals: 1
+        issue-title: "Deploying v1.0.0 to ${{ github.event.inputs.environment }}"
+        issue-body: "Review the terraform plan, then approve or deny the deployment of v1.0.0 to ${{ github.event.inputs.environment }}"
+        exclude-workflow-initiator-as-approver: false
+
+    - name: Terraform Plan
+      uses: hashicorp/terraform-github-actions/plan@v0.4.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
+        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
