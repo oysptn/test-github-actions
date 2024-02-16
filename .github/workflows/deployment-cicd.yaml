@@ -25,8 +25,8 @@ jobs:
       run: |
         AWS_SECRET_ACCESS_KEY_NAME="AWS_SECRET_ACCESS_KEY_$(echo ${{ github.event.inputs.environment }} | tr '[:lower:]' '[:upper:]')"
         AWS_ACCESS_KEY_ID_NAME="AWS_ACCESS_KEY_ID_$(echo ${{ github.event.inputs.environment }} | tr '[:lower:]' '[:upper:]')"
-        echo "AWS_SECRET_ACCESS_KEY=${{ secrets.${{AWS_ACCESS_KEY_ID_NAME}} }}"
-        echo "AWS_ACCESS_KEY_ID=${{ secrets.${{AWS_SECRET_ACCESS_KEY}} }}"
+        echo "AWS_SECRET_ACCESS_KEY=${{ secrets.'${{AWS_ACCESS_KEY_ID_NAME}}' }}"
+        echo "AWS_ACCESS_KEY_ID=${{ secrets.'${{AWS_SECRET_ACCESS_KEY}}' }}"
         
     - name: Display AWS_SECRET_ACCESS_KEY
       run: |
