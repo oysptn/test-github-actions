@@ -24,15 +24,19 @@ jobs:
     - uses: trstringer/manual-approval@v1
       with:
         secret: ${{ github.TOKEN }}
-        approvers: toantrinh0208
+        approvers: comicalwriter
         minimum-approvals: 1
         issue-title: "Deploying v1.0.0 to ${{ github.event.inputs.environment }}"
         issue-body: "Review the terraform plan, then approve or deny the deployment of v1.0.0 to ${{ github.event.inputs.environment }}"
         exclude-workflow-initiator-as-approver: false
     - name: Set AWS Credentials
       run: |
-        echo "AWS_SECRET_ACCESS_KEY=${{ secrets['AWS_SECRET_ACCESS_KEY_' + github.event.inputs.environment] }}" >> $GITHUB_ENV
-        echo "AWS_ACCESS_KEY_ID=${{ secrets['AWS_ACCESS_KEY_ID_' + github.event.inputs.environment] }}" >> $GITHUB_ENV
+        # echo "AWS_SECRET_ACCESS_KEY=${{ secrets['AWS_SECRET_ACCESS_KEY_' + github.event.inputs.environment] }}" >> $GITHUB_ENV
+        # echo "AWS_ACCESS_KEY_ID=${{ secrets['AWS_ACCESS_KEY_ID_' + github.event.inputs.environment] }}" >> $GITHUB_ENV
+        AWS_SECRET_ACCESS_KEY_NAME="AWS_SECRET_ACCESS_KEY_${{ github.event.inputs.environment }}"
+        AWS_ACCESS_KEY_ID_NAME="AWS_ACCESS_KEY_ID_${{ github.event.inputs.environment }}"
+        echo "AWS_SECRET_ACCESS_KEY=${{ secrets[AWS_SECRET_ACCESS_KEY_NAME] }}" >> $GITHUB_ENV
+        echo "AWS_ACCESS_KEY_ID=${{ secrets[AWS_ACCESS_KEY_ID_NAME] }}" >> $GITHUB_ENV
 
     - name: Display AWS_SECRET_ACCESS_KEY
       run: |
@@ -56,7 +60,7 @@ jobs:
     - uses: trstringer/manual-approval@v1
       with:
         secret: ${{ github.TOKEN }}
-        approvers: toantrinh0208
+        approvers: comicalwriter
         minimum-approvals: 1
         issue-title: "Deploying v1.0.0 to ${{ github.event.inputs.environment }}"
         issue-body: "Review the terraform plan, then approve or deny the deployment of v1.0.0 to ${{ github.event.inputs.environment }}"
