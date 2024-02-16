@@ -30,7 +30,7 @@ jobs:
         
     - name: Display AWS_SECRET_ACCESS_KEY
       run: |
-        echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+        echo "AWS_SECRET_ACCESS_KEY: ${{AWS_SECRET_ACCESS_KEY}}"
       shell: bash
       
     - name: Checkout Repo
