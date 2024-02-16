@@ -25,8 +25,8 @@ jobs:
       run: |
         AWS_SECRET_ACCESS_KEY_NAME="AWS_SECRET_ACCESS_KEY_$(echo ${{ github.event.inputs.environment }} | tr '[:lower:]' '[:upper:]')"
         AWS_ACCESS_KEY_ID_NAME="AWS_ACCESS_KEY_ID_$(echo ${{ github.event.inputs.environment }} | tr '[:lower:]' '[:upper:]')"
-        echo "AWS_SECRET_ACCESS_KEY=${{ secrets[ '${{AWS_ACCESS_KEY_ID_NAME}}' ] }}" >> $GITHUB_ENV
-        echo "AWS_ACCESS_KEY_ID=${{ secrets[ '${{AWS_SECRET_ACCESS_KEY}}' ] }}" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=${{ secrets[ '${{AWS_ACCESS_KEY_ID_NAME}}' ] }}"
+        echo "AWS_ACCESS_KEY_ID=${{ secrets[ '${{AWS_SECRET_ACCESS_KEY}}' ] }}"
         
     - name: Display AWS_SECRET_ACCESS_KEY
       run: |
@@ -47,14 +47,14 @@ jobs:
     - name: Terraform Validate
       uses: hashicorp/terraform-github-actions/validate@v0.3.7
 
-    - uses: trstringer/manual-approval@v1
-      with:
-        secret: ${{ github.TOKEN }}
-        approvers: comicalwriter
-        minimum-approvals: 1
-        issue-title: "Deploying v1.0.0 to ${{ github.event.inputs.environment }}"
-        issue-body: "Review the terraform plan, then approve or deny the deployment of v1.0.0 to ${{ github.event.inputs.environment }}"
-        exclude-workflow-initiator-as-approver: false
+    # - uses: trstringer/manual-approval@v1
+    #   with:
+    #     secret: ${{ github.TOKEN }}
+    #     approvers: comicalwriter
+    #     minimum-approvals: 1
+    #     issue-title: "Deploying v1.0.0 to ${{ github.event.inputs.environment }}"
+    #     issue-body: "Review the terraform plan, then approve or deny the deployment of v1.0.0 to ${{ github.event.inputs.environment }}"
+    #     exclude-workflow-initiator-as-approver: false
 
     - name: Terraform Plan
       uses: hashicorp/terraform-github-actions/plan@v0.4.0
