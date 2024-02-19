@@ -35,6 +35,7 @@ jobs:
     - name: Display AWS_SECRET_ACCESS_KEY
       run: |
         echo "AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}"
+        echo "AWS_SECRET_ACCESS_KEY: ${{ secrets[env.AWS_SECRET_ACCESS_KEY_NAME] }}"
       shell: bash
       
     - name: Checkout Repo
