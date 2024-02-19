@@ -28,11 +28,6 @@ jobs:
     steps:
     - name: Terraform Validate
       uses: hashicorp/terraform-github-actions/validate@v0.3.7
-        
-    - name: Display AWS_SECRET_ACCESS_KEY
-      run: |
-        echo "AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID_NAME] }}"
-      shell: bash
       
     - name: Checkout Repo
       uses: actions/checkout@v1
