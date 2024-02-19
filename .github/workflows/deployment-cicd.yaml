@@ -17,18 +17,18 @@ jobs:
   tf_fmt:
     name: Deploy Site
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID_NAME: ${{ format('AWS_ACCESS_KEY_ID_{0}', github.event.inputs.environment^^) }}
+      AWS_SECRET_ACCESS_KEY_NAME: ${{ format('AWS_SECRET_ACCESS_KEY_{0}', github.event.inputs.environment^^) }}
     steps:
     - name: Terraform Validate
       uses: hashicorp/terraform-github-actions/validate@v0.3.7
       
     - name: Set AWS Credentials
-      run: |
-         AWS_SECRET_ACCESS_KEY_NAME=$(echo "AWS_SECRET_ACCESS_KEY_${{ github.event.inputs.environment }}" | tr '[:lower:]' '[:upper:]')
-         AWS_ACCESS_KEY_ID_NAME=$(echo "AWS_ACCESS_KEY_ID_${{ github.event.inputs.environment }}" | tr '[:lower:]' '[:upper:]')
-      
-         AWS_SECRET_ACCESS_KEY="${{ secrets[format(AWS_SECRET_ACCESS_KEY_NAME)] }}"
-         AWS_ACCESS_KEY_ID="${{ secrets[format(AWS_ACCESS_KEY_ID_NAME)] }}"
-      
+      run: |               
+         AWS_SECRET_ACCESS_KEY="${{ secrets[env.AWS_SECRET_ACCESS_KEY_NAME] }}"
+         AWS_ACCESS_KEY_ID="${{ secrets[env.AWS_ACCESS_KEY_ID_NAME] }}"
+        
          echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
          echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
         
