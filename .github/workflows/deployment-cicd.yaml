@@ -18,8 +18,8 @@ jobs:
     name: Deploy Site
     runs-on: ubuntu-latest
     env:
-      AWS_SECRET_ACCESS_KEY_NAME: ${{ format('AWS_SECRET_ACCESS_KEY_{0}', github.event.inputs.environment) }}
-      AWS_ACCESS_KEY_ID_NAME: ${{ format('AWS_ACCESS_KEY_ID_{0}', github.event.inputs.environment) }}
+      AWS_SECRET_ACCESS_KEY_NAME: ${{ format('AWS_SECRET_ACCESS_KEY_{0}', 'DEV') }}
+      AWS_ACCESS_KEY_ID_NAME: ${{ format('AWS_ACCESS_KEY_ID_{0}', 'DEV') }}
       
     steps:
     - name: Terraform Validate
