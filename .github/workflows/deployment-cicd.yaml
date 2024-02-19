@@ -17,10 +17,13 @@ jobs:
   tf_fmt:
     name: Deploy Site
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     env:
-      AWS_SECRET_ACCESS_KEY_NAME: ${{ format('AWS_SECRET_ACCESS_KEY_{0}', 'DEV') }}
-      AWS_ACCESS_KEY_ID_NAME: ${{ format('AWS_ACCESS_KEY_ID_{0}', 'DEV') }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
+      TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
+      GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
       
     steps:
     - name: Terraform Validate
@@ -36,11 +39,6 @@ jobs:
 
     - name: Terraform Init
       uses: hashicorp/terraform-github-actions/init@v0.4.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
-        TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
-        AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID_NAME] }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets[env.AWS_SECRET_ACCESS_KEY_NAME] }}
 
     - name: Terraform Validate
       uses: hashicorp/terraform-github-actions/validate@v0.3.7
@@ -56,9 +54,4 @@ jobs:
 
     - name: Terraform Plan    
       uses: hashicorp/terraform-github-actions/plan@v0.4.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
-        TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
-        AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID_NAME] }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets[env.AWS_SECRET_ACCESS_KEY_NAME] }}    
-      
+     
