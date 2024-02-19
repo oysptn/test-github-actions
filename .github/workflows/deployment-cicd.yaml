@@ -46,6 +46,14 @@ jobs:
         echo "** Running Terraform Validate**"
         terraform validate
 
+        # echo "** Running Terraform Plan**"
+        # terraform plan
+      working-directory: iac/${{ github.event.inputs.environment }}
+
+    - name: Terraform apply
+      run: |
+        echo `pwd`
+        
         echo "** Running Terraform Plan**"
         terraform plan
       working-directory: iac/${{ github.event.inputs.environment }}
