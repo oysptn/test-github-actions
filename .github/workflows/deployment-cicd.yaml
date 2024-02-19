@@ -47,8 +47,8 @@ jobs:
         echo "** Running Terraform Validate**"
         terraform validate
 
-        # echo "** Running Terraform Plan**"
-        # terraform plan
+        echo "** Running Terraform Plan**"
+        terraform plan
       working-directory: iac/${{ github.event.inputs.environment }}
       
     - uses: trstringer/manual-approval@v1
@@ -63,6 +63,6 @@ jobs:
     - name: Terraform apply
       run: |
         echo `pwd`        
-        echo "** Running Terraform Plan**"
-        terraform plan
+        echo "** Running Terraform Deploy**"
+        terraform apply -auto-approve
       working-directory: iac/${{ github.event.inputs.environment }}
