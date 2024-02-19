@@ -18,10 +18,7 @@ jobs:
     name: Deploy Site
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ vars.AWS_REGION }}      
+    env:   
       GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
       
     steps:      
@@ -34,20 +31,21 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ vars.AWS_REGION }}
+        
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v3.0.0
 
     - name: Terraform init, plan and apply
       run: |
         echo `pwd`
-        echo "** Running Terraform Init**"
+        echo "** Running Terraform Init **"
         terraform init
 
-        echo "** Running Terraform Validate**"
+        echo "** Running Terraform Validate **"
         terraform validate
 
-        # echo "** Running Terraform Plan**"
-        # terraform plan
+        echo "** Running Terraform Plan **"
+        terraform plan
       working-directory: iac/${{ github.event.inputs.environment }}
       
     - uses: trstringer/manual-approval@v1
@@ -61,9 +59,8 @@ jobs:
         
     - name: Terraform apply
       run: |
-        echo `pwd`
-        
-        echo "** Running Terraform Plan**"
-        terraform plan
+        echo `pwd`        
+        echo "** Running Terraform Deploy**"
+        terraform apply -auto-approve
       working-directory: iac/${{ github.event.inputs.environment }}
 
