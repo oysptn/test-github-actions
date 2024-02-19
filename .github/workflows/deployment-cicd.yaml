@@ -20,15 +20,14 @@ jobs:
     env:
       AWS_SECRET_ACCESS_KEY_NAME: ${{ format('AWS_SECRET_ACCESS_KEY_{0}', github.event.inputs.environment) }}
       AWS_ACCESS_KEY_ID_NAME: ${{ format('AWS_ACCESS_KEY_ID_{0}', github.event.inputs.environment) }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets[env.AWS_SECRET_ACCESS_KEY_NAME] }}
-      AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID_NAME] }}
+      
     steps:
     - name: Terraform Validate
       uses: hashicorp/terraform-github-actions/validate@v0.3.7
         
     - name: Display AWS_SECRET_ACCESS_KEY
       run: |
-        echo "AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}"
+        echo "AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID_NAME] }}"
       shell: bash
       
     - name: Checkout Repo
@@ -39,8 +38,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
         TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
-        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID_NAME] }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets[env.AWS_SECRET_ACCESS_KEY_NAME] }}
 
     - name: Terraform Validate
       uses: hashicorp/terraform-github-actions/validate@v0.3.7
@@ -59,6 +58,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
-        AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}    
+        AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID_NAME] }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets[env.AWS_SECRET_ACCESS_KEY_NAME] }}    
       
