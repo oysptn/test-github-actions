@@ -61,10 +61,14 @@ jobs:
     #     issue-body: "Review the terraform plan, then approve or deny the deployment of v1.0.0 to ${{ github.event.inputs.environment }}"
     #     exclude-workflow-initiator-as-approver: false
 
-    - name: Terraform Plan
-      uses: hashicorp/terraform-github-actions/plan@v0.4.0
+    - name: Terraform Plan     
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
         AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}    
+      run: |        
+        # Change directory to the Terraform working directory
+        cd iac/${{ github.event.inputs.environment }}    
+        # Plan Terraform changes
+        terraform plan
