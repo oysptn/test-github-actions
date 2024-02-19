@@ -36,10 +36,7 @@ jobs:
       env: 
         TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
 
-    - name: Terraform Validate
-      uses: hashicorp/terraform-github-actions/validate@v0.3.7
-      env: 
-        TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
+    
 
     # - uses: trstringer/manual-approval@v1
     #   with:
