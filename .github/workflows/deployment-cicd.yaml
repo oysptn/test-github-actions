@@ -26,7 +26,7 @@ jobs:
       
     steps:
     - name: Terraform Validate
-      uses: hashicorp/terraform-github-actions/validate@v0.3.7
+      uses: hashicorp/terraform-github-actions/validate@v0.4.0
       
     - name: Checkout Repo
       uses: actions/checkout@v1
