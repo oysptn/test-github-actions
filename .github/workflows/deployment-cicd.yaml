@@ -35,6 +35,8 @@ jobs:
 
     - name: Terraform Init
       uses: hashicorp/terraform-github-actions/init@v0.4.0
+      run: |
+        aws s3 ls
       env:
         GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
         TF_ACTION_WORKING_DIR: 'iac/${{ github.event.inputs.environment }}'
